@@ -5,12 +5,13 @@ import { HealthModule } from './health/health.module';
 import { AppDataSource, typeOrmConfig } from 'src/data-source';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
   TypeOrmModule.forRootAsync({
     useFactory: async () => typeOrmConfig,
-  }), HealthModule
+  }), HealthModule, UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],

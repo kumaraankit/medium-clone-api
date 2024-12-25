@@ -9,11 +9,12 @@ async function bootstrap() {
     logger: WinstonModule.createLogger(winstonConfig)
 
   });
+  app.enableCors()
   const config = new DocumentBuilder()
     .setTitle('Medium Clone')
     .setDescription('Different APIs of medium clone')
     .setVersion('1.0')
-    .addTag('API')
+    .addTag('Users')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
