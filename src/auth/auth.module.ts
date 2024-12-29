@@ -4,10 +4,18 @@ import { AuthController } from './auth.controller';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from 'src/users/users.module';
+import { JwtModule } from '@nestjs/jwt';
+import { UsersService } from 'src/users/users.service';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  imports: [PassportModule.register({ defaultStrategy: 'google' }), UsersModule],
+  //imports: [PassportModule.register({ defaultStrategy: 'google' }), UsersModule],
+  imports: [PassportModule, JwtModule.register({
+    secret: 'your_jwt_secret',
+    signOptions: { expiresIn: '1h' }
+  })],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy],
+  //providers: [AuthService, GoogleStrategy],
+  providers: [AuthService, UsersService, JwtStrategy],
 })
 export class AuthModule { }
