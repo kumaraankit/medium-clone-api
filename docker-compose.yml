@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: testdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  # mssql:
+  #   image: mcr.microsoft.com/mssql/server:2019-latest
+  #   container_name: mssql_db
+  #   environment:
+  #     ACCEPT_EULA: "Y"
+  #     SA_PASSWORD: "password"
+  #     MSSQL_PID: "Express"
+  #   ports:
+  #     - "1433:1433"
+  #   volumes:
+  #     - mssql_data:/var/opt/mssql
+volumes:
+  postgres_data:
