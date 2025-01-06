@@ -10,12 +10,12 @@ export const AppDataSource = new DataSource({
     username: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    synchronize: false,
+    synchronize: true,
     logging: true,
     // entities: [__dirname + '/**/*.entity.{js,ts}'],
     entities: [path.join(__dirname, '**', 'entities', '*.entity.{ts,js}')],
     migrations: [__dirname + '/migrations/*.{js,ts}'],
 });
-export const typeOrmConfig: TypeOrmModuleOptions = {
-    ...AppDataSource.options,
-};
+// export const typeOrmConfig: TypeOrmModuleOptions = {
+//     ...AppDataSource.options,
+// };

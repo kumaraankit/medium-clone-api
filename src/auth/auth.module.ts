@@ -9,13 +9,11 @@ import { UsersService } from 'src/users/users.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
-  //imports: [PassportModule.register({ defaultStrategy: 'google' }), UsersModule],
-  imports: [PassportModule, JwtModule.register({
+  imports: [UsersModule, PassportModule, JwtModule.register({
     secret: 'your_jwt_secret',
     signOptions: { expiresIn: '1h' }
   })],
   controllers: [AuthController],
-  //providers: [AuthService, GoogleStrategy],
-  providers: [AuthService, UsersService, JwtStrategy],
+  providers: [AuthService],
 })
 export class AuthModule { }

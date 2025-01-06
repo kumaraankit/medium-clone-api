@@ -8,27 +8,16 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ) { }
-  private users = [
-    {
-      id: 1,
-      username: 'testuser',
-      password: bcrypt.hashSync('password123', 10), // Hashed password
-    },
-  ];
 
-  async findOne(username: string) {
-    return this.users.find((user) => user.username === username)
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findOne({ where: { username } })
   }
-  // async findOrCreate(googleId: string, name: string, email: string): Promise<User> {
-  //   let user = await this.userRepository.findOne({ where: { googleId } });
-  //   if (!user) {
-  //     user = this.userRepository.create({ googleId, name, email })
-  //     await this.userRepository.save(user)
-  //   }
-  //   return user;
-  // }
-  // async findByGoogleId(googleId: string): Promise<User> {
-  //   return this.userRepository.findOne({ where: { googleId } })
-  // }
+
+  async createUser(username: string, password: string): Promise<User> {
+    const user = this.userRepository.create({ username, password });
+    return await this.userRepository.save(user);
+  }
 }

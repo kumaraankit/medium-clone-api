@@ -6,14 +6,11 @@ export class User {
     id: number;
 
     @Column({ unique: true })
-    googleId: string;
+    username: string;
 
     @Column()
-    name: string;
+    password: string;
 
-    @Column({ unique: true })
-    email: string;
-
-    @Column({ default: true })
-    isActive: boolean;
+    @Column({ default: false })
+    isAdmin: boolean;
 }

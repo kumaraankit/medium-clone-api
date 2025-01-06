@@ -20,40 +20,17 @@ async function bootstrap() {
       contentSecurityPolicy: false,
     })
   );
-  app.use(
-    helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          "'unsafe-inline'",
-          "'unsafe-eval'",
-          "https://www.gstatic.com",
-          "https://accounts.google.com",
-        ],
-        frameSrc: ["https://accounts.google.com"], // Allow Google frames
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "https://www.gstatic.com"],
-        connectSrc: [
-          "'self'",
-          "https://accounts.google.com",
-          "https://www.googleapis.com", // Allow API calls
-        ],
-        fontSrc: ["'self'"],
-        objectSrc: ["'none'"],
-      },
-    })
-  );
   app.use((req, res, next) => {
     res.removeHeader('Cross-Origin-Opener-Policy');
     res.removeHeader('Cross-Origin-Embedder-Policy');
     next();
   });
-    
+
   const config = new DocumentBuilder()
     .setTitle('Medium Clone')
     .setDescription('Different APIs of medium clone')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('Users')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);

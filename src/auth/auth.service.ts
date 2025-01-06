@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { SignupDto } from './dto/signup.dto';
+import { SigninDto } from './dto/signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,38 +12,32 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) { }
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.userService.findOne(username);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const { password, ...result } = user;
-      return result;
+  async signup(signupDto: SignupDto): Promise<{ message: string }> {
+    const { username, password } = signupDto;
+
+    const existingUser = await this.userService.findByUsername(username)
+    if (existingUser) {
+      throw new ConflictException('User already exists')
     }
-    return null;
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+    await this.userService.createUser(username, hashedPassword)
+    return { message: 'user created successfully' }
   }
 
-  async login(user: any) {
+  async signin(signinDto: SigninDto): Promise<{ accessToken: string }> {
+    const { username, password } = signinDto;
+    const user = await this.userService.findByUsername(username)
+    if (!user) {
+      throw new NotFoundException("user Not found")
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
     const payload = { username: user.username, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const accessToken = this.jwtService.sign(payload);
+
+    return { accessToken };
   }
-  // create(createAuthDto: CreateAuthDto) {
-  //   return 'This action adds a new auth';
-  // }
-
-  // findAll() {
-  //   return `This action returns all auth`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} auth`;
-  // }
-
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} auth`;
-  // }
 }
