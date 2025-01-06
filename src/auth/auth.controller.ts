@@ -1,28 +1,20 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { SignupDto } from './dto/signup.dto';
+import { SigninDto } from './dto/signin.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
-  // @Get('google/callback')
-  // @UseGuards(AuthGuard('google'))
-  // googleCallback(@Req() req) {
-  //   return req.user;
-  // }
 
-  // @Post('google')
-  // @UseGuards(AuthGuard('google'))
-  // googleLogin(@Req() req) {
-  //   return req.user;
-  // }
+  @Post('signup')
+  async signup(@Body() signupDto: SignupDto) {
+    return this.authService.signup(signupDto);
+  }
 
-  @Post('login')
-  async login(@Body() body: { username: string; password: string }) {
-    const user = await this.authService.validateUser(body.username, body.password);
-    if (!user) {
-      return { message: 'Invalid credentials' };
-    }
-    return this.authService.login(user);
+  @Post('signin')
+  async signin(@Body() signinDto: SigninDto) {
+    return this.authService.signin(signinDto);
   }
 }
