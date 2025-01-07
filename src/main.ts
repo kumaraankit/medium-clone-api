@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from 'winston-logger.config';
 import helmet from 'helmet';
+import { VersioningType } from '@nestjs/common';
 
 
 async function bootstrap() {
@@ -11,15 +12,18 @@ async function bootstrap() {
     logger: WinstonModule.createLogger(winstonConfig)
 
   });
+
+  app.setGlobalPrefix('api')
+  app.enableVersioning({type:VersioningType.URI})
   app.enableCors({
     origin: ['http://localhost:5173', 'https://accounts.google.com'],
-    credentials: true,
+   // credentials: true,
   });
-  app.use(
-    helmet({
-      contentSecurityPolicy: false,
-    })
-  );
+  // app.use(
+  //   helmet({
+  //     contentSecurityPolicy: false,
+  //   })
+  // );
   app.use((req, res, next) => {
     res.removeHeader('Cross-Origin-Opener-Policy');
     res.removeHeader('Cross-Origin-Embedder-Policy');
