@@ -28,6 +28,13 @@ export class PostsService {
         Object.assign(post, updatePostDto)
         return this.postRepository.save(post)
     }
+
+    async deletePost(id: string): Promise<void> {
+        const deletePost = await this.postRepository.delete(id)
+        if (deletePost.affected === 0) {
+            throw new NotFoundException(`post with ${id} not found`)
+        }
+    }
 }
 
 
