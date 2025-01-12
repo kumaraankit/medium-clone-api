@@ -14,10 +14,10 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api')
-  app.enableVersioning({type:VersioningType.URI})
+  app.enableVersioning({ type: VersioningType.URI })
   app.enableCors({
     origin: ['http://localhost:5173', 'https://accounts.google.com'],
-   // credentials: true,
+    // credentials: true,
   });
   // app.use(
   //   helmet({
@@ -35,7 +35,7 @@ async function bootstrap() {
     .setDescription('Different APIs of medium clone')
     .setVersion('1.0')
     .addBearerAuth()
-    .addTag('Users')
+    .addTag('Medium APIs')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
