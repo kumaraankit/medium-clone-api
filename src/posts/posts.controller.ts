@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Patch, Post, Version } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Version } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { GetPostDto } from './dto/get-posts.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller({ path: 'posts', version: '1' })
@@ -36,5 +36,24 @@ export class PostsController {
     })
     async updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto): Promise<CreatePostDto> {
         return this.postService.updatePostById(id, updatePostDto)
+    }
+    @Delete(':id')
+    @ApiParam({
+        name: 'id',
+        type: Number,
+        description: 'The ID of the post to delete',
+        example: 1,
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Post successfully deleted',
+    })
+    @ApiResponse({
+        status: 404,
+        description: 'Post not found',
+    })
+    async deletePost(@Param('id') id: string): Promise<{ message: string }> {
+        await this.postService.deletePost(id)
+        return { message: `Post with ID ${id} deleted successfully` }
     }
 }
