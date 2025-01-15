@@ -10,8 +10,11 @@ export class PostsController {
     constructor(private readonly postService: PostsService) { }
 
     @Post('create')
-    async createPosts(@Body() createPostDto: CreatePostDto) {
-        return await this.postService.createPost(createPostDto.title, createPostDto.description)
+    async createPosts(@Body('title') title: string,
+        @Body('description') description: string,
+        @Body('body') body: string,
+        @Body('authorId') authorId: number) {
+        return await this.postService.createPost(title, description, body, authorId)
     }
 
     @Get('getposts')
@@ -20,9 +23,9 @@ export class PostsController {
         description: 'List of all posts.',
         type: [GetPostDto],
     })
-    async getAllPosts(): Promise<GetPostDto[]> {
-        return this.postService.getAllPosts()
-    }
+    // async getAllPosts(): Promise<GetPostDto[]> {
+    //     return this.postService.getAllPosts()
+    // }
 
     @Patch(':id')
     @ApiResponse({
@@ -34,9 +37,9 @@ export class PostsController {
         status: 404,
         description: 'Post not found.',
     })
-    async updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto): Promise<CreatePostDto> {
-        return this.postService.updatePostById(id, updatePostDto)
-    }
+    // async updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto): Promise<CreatePostDto> {
+    //     return this.postService.updatePostById(id, updatePostDto)
+    // }
     @Delete(':id')
     @ApiParam({
         name: 'id',

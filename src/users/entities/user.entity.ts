@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { CreatePost } from 'src/posts/entities/create-post.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -8,9 +9,12 @@ export class User {
     @Column({ unique: true })
     username: string;
 
+    @Column({ unique: true })
+    email: string;
+
     @Column()
     password: string;
 
-    @Column({ default: false })
-    isAdmin: boolean;
+    @OneToMany(() => CreatePost, (post) => post.author)
+    posts: CreatePost[]
 }
